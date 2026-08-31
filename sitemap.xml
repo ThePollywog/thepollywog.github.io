@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Three URLs, one per site on the origin. This file is at the domain root, which
+  on a GitHub Pages user site is the only place a sitemap can cover the project
+  repos published alongside it — /saltdog/ and /webnavfit/ have no way to
+  publish a sitemap that a crawler will trust for the whole origin.
+
+  DEEP LINKS ARE DELIBERATELY ABSENT. Both apps are hash-routed single-page
+  applications, so every page inside them is …/saltdog/#/knowledge/ranks — and
+  a fragment is not part of a URL as far as a crawler is concerned. Listing them
+  would submit the same three URLs over and over and dilute the file for no
+  gain. Getting those pages indexed individually would require pre-rendering, a
+  real decision with real cost, and it is not one this sitemap can fake.
+
+  NO <changefreq> AND NO <priority>. Google has stated it ignores both, and a
+  file that asserts things nobody reads invites the next editor to believe they
+  matter. <lastmod> IS read, but only when it is honest, so it is a real date
+  and tools/check.mjs enforces the format — update it when the content changes,
+  and leave it alone when it has not.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://thepollywog.github.io/</loc>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://thepollywog.github.io/saltdog/</loc>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://thepollywog.github.io/webnavfit/</loc>
+    <lastmod>2026-08-12</lastmod>
+  </url>
+</urlset>

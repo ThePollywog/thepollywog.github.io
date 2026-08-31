@@ -1,0 +1,37 @@
+<!--
+  THE POLLYWOG favicon.
+
+  NOT the patch artwork, and that is the whole decision. The patch is a detailed
+  illustration — a helmeted tadpole in a pond, inside a ring of lettering — and
+  at the 16px a browser tab actually rasterizes, every one of those elements
+  collapses into an olive smudge. Five candidate marks were rendered at 96, 32
+  and 16 and compared side by side; the shape below was the only one that still
+  read as a creature at 16px. Two rejected variants are worth recording because
+  they were the obvious ideas: a comma-shaped tail with an eye reads as a comet,
+  and a tapering swept tail reads as a trumpet. The blunt paddle tail, with the
+  notch, is what makes it read as an animal rather than an object.
+
+  A tadpole and not an anchor, because the sibling site (SALTDOG) already uses an
+  anchor and two tabs from the same origin showing the same glyph is worse than
+  no glyph. Same reason the palette is olive rather than SALTDOG's navy/gold.
+
+  Colours are literals, not custom properties, because a favicon is fetched
+  before any CSS runs and cannot see them. #0E130F is the patch's own near-black
+  green and #A9B063 is its olive lettering brightened to 8.11:1 against it — the
+  patch's actual #5C5B32 is 2.68:1 and disappears at this size.
+
+  Full-bleed square, no corner radius: at 16px a radius is mush, and the
+  platforms that want rounded corners apply their own mask to the PNG icons.
+
+  favicon.ico is rasterized FROM this file by tools/build-assets.py, so the tab
+  icon and its fallback cannot drift apart.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <title>The Pollywog</title>
+  <rect width="24" height="24" fill="#0E130F" />
+  <g fill="#A9B063">
+    <ellipse cx="8.5" cy="12" rx="6.5" ry="5.2" />
+    <path d="M13.5 8.6c2.6-.4 5.3-1.6 8-3.6-1.4 3-2 6-1.8 9.2-2.1-2.2-4.4-3.7-6.9-4.4z" />
+  </g>
+  <circle cx="6.4" cy="10.6" r="1.5" fill="#0E130F" />
+</svg>
