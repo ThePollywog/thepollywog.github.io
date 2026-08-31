@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>go</title>
+  <meta name="robots" content="noindex">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem; color: #222; }
+    code { background: #f0f0f0; padding: 0.15rem 0.35rem; border-radius: 0.25rem; }
+    ul { line-height: 1.8; }
+    a { color: #0645ad; }
+  </style>
+</head>
+<body>
+  <div id="content">Loading&hellip;</div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var key = (params.get('to') || location.hash.slice(1) || '').trim().toLowerCase();
+
+      fetch('links.json')
+        .then(function (r) { return r.json(); })
+        .then(function (links) {
+          if (key && links[key]) {
+            location.replace(links[key]);
+            return;
+          }
+          renderIndex(links, key);
+        })
+        .catch(function () {
+          document.getElementById('content').textContent = 'Could not load links.json.';
+        });
+
+      function renderIndex(links, key) {
+        var el = document.getElementById('content');
+        var html = '';
+        if (key) {
+          html += '<p>No go link for <code>' + escapeHtml(key) + '</code>.</p>';
+        }
+        html += '<p>Available go links:</p><ul>';
+        Object.keys(links).sort().forEach(function (k) {
+          html += '<li><code>go ' + escapeHtml(k) + '</code> &rarr; <a href="' + escapeHtml(links[k]) + '">' + escapeHtml(links[k]) + '</a></li>';
+        });
+        html += '</ul>';
+        el.innerHTML = html;
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
