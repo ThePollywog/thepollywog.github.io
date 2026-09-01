@@ -398,6 +398,71 @@ const MUTATIONS = [
     from: '<html lang="en">',
     to: "<html>",
   },
+  // --- the issue queue ---
+  {
+    label: "a form is deleted from the queue",
+    kills: "the issue queue offers a form for each thing people arrive to do",
+    file: ".github/ISSUE_TEMPLATE/bug.yml",
+    from: "name: Something is broken",
+    to: "nome: Something is broken",
+    rename: true,
+  },
+  {
+    label: "a field type is misspelled, so GitHub silently drops the field",
+    kills: "every form declares what GitHub needs to render it",
+    file: ".github/ISSUE_TEMPLATE/feature-request.yml",
+    from: "  - type: dropdown\n    id: kind",
+    to: "  - type: dropdwon\n    id: kind",
+  },
+  {
+    label: "two fields share an id, making one unaddressable in a prefill URL",
+    kills: "every form declares what GitHub needs to render it",
+    file: ".github/ISSUE_TEMPLATE/bug.yml",
+    from: "    id: browser",
+    to: "    id: where",
+  },
+  {
+    label: "a form stops offering one of the three sites",
+    kills: "every form asks which site, and offers all of them",
+    file: ".github/ISSUE_TEMPLATE/bug.yml",
+    from: "        - WEBNAVFIT\n",
+    to: "",
+  },
+  {
+    label: "a form stops asking which site at all",
+    kills: "every form asks which site, and offers all of them",
+    file: ".github/ISSUE_TEMPLATE/feature-request.yml",
+    from: "    id: site",
+    to: "    id: which_site",
+  },
+  {
+    label: "a correction can be filed with no source",
+    kills: "a correction cannot be filed without naming what says so",
+    file: ".github/ISSUE_TEMPLATE/content-correction.yml",
+    from: "      placeholder: BUPERSINST 1610.10, ch. 4 — or the MyNavy HR page it is published on\n    validations:\n      required: true",
+    to: "      placeholder: BUPERSINST 1610.10, ch. 4 — or the MyNavy HR page it is published on",
+  },
+  {
+    label: "a form drops its personal-data warning",
+    kills: "every form warns against putting personal data in a public issue",
+    file: ".github/ISSUE_TEMPLATE/content-correction.yml",
+    from: "        - label: This report contains no personal information — no name, DoD ID, or screenshot of my own record.\n          required: true",
+    to: "        - label: I have read the above.\n          required: true",
+  },
+  {
+    label: "the chooser links a template that does not exist",
+    kills: "the chooser's own links resolve to templates that exist",
+    file: ".github/ISSUE_TEMPLATE/config.yml",
+    from: "template=content-correction.yml",
+    to: "template=correction.yml",
+  },
+  {
+    label: "blank issues are turned off here, so the maintainer loses the quick note",
+    kills: "the chooser's own links resolve to templates that exist",
+    file: ".github/ISSUE_TEMPLATE/config.yml",
+    from: "\nblank_issues_enabled: true",
+    to: "\nblank_issues_enabled: false",
+  },
 ];
 
 function apply(dir, m) {

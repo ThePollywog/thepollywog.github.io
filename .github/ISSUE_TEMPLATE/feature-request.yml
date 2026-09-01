@@ -1,0 +1,73 @@
+name: Add or change a feature
+description: A new quick link, reference topic, tool, or go shortcut — or a change to one that exists.
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The most useful thing you can put in this form is **what you do today
+        instead**. Nearly every feature on these sites started as somebody
+        describing a workaround — a bookmark folder, a spreadsheet, a printed
+        card — and the workaround says more about the shape of the fix than a
+        feature name does.
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site
+      options:
+        - SALTDOG
+        - WEBNAVFIT
+        - Homepage
+        - New site or not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of thing
+      description: Roughly — this only decides where it lands, not whether it happens.
+      options:
+        - A link to a system that is missing
+        - A reference card or a section on one
+        - A calculator or planning tool
+        - A "go" address-bar shortcut
+        - A change to something that already exists
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do, and what do you do today instead?
+      description: The task, not the feature. "I check three sites every drill weekend to work out…"
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Where would the information come from?
+      description: >-
+        For anything that adds facts — a rank chart, a deadline, a points rule —
+        name the instruction, chart or official page behind it. Nothing goes on
+        these sites without a source, so a request that names one can be built;
+        one that does not has to wait until somebody finds it.
+      placeholder: e.g. the PFA cycle dates in the current OPNAVINST 6110.1
+  - type: dropdown
+    id: reach
+    attributes:
+      label: Who else needs this
+      options:
+        - Most reservists would use it
+        - My unit or rating specifically
+        - Mostly just me
+        - No idea
+    validations:
+      required: true
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before submitting
+      options:
+        - label: This request contains no personal information and nothing CUI or classified.
+          required: true

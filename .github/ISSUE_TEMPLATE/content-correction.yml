@@ -1,0 +1,67 @@
+name: Correction — something is wrong or out of date
+description: A dead link, a superseded instruction, a wrong rank, award or date.
+title: "[correction] "
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        These sites are transcriptions of official charts and instructions, so a
+        correction is only as good as what it cites. The source field below is
+        required for that reason — not to make this harder, but because a change
+        made without one cannot be told apart from a guess six months later.
+
+        **Nothing here is a system of record.** If you need something fixed in
+        your own record, that is NSIPS or your NOSC, not this form.
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site
+      options:
+        - SALTDOG
+        - WEBNAVFIT
+        - Homepage
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Paste the link from your address bar, or name the page and section.
+      placeholder: https://thepollywog.github.io/saltdog/#/knowledge/ranks
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What it says now
+      description: Quote it if you can, so it can be found exactly.
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: What says so
+      description: >-
+        The instruction, chart, NAVADMIN or official page this comes from —
+        series number and article if you have them. "The current NAVPERS 15665"
+        is enough; a link to a CAC-gated page is fine, it just needs naming.
+      placeholder: BUPERSINST 1610.10, ch. 4 — or the MyNavy HR page it is published on
+    validations:
+      required: true
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before submitting
+      options:
+        - label: I checked this against the current publication, not a cached or printed copy.
+          required: true
+        - label: This report contains no personal information — no name, DoD ID, or screenshot of my own record.
+          required: true

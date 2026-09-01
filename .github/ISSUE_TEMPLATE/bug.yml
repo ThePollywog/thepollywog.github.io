@@ -1,0 +1,53 @@
+name: Something is broken
+description: A page that will not load, a control that does nothing, a number that is obviously wrong.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the page shows the *wrong information* but works, use the correction
+        form instead — that is a content problem and it needs a source rather
+        than a browser version.
+
+        **Please do not attach a screenshot of your own record.** These sites
+        keep what you enter in your browser and nothing is transmitted, so a
+        screenshot of the points tracker or a ribbon rack is the one way your
+        own data could end up on a public issue.
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site
+      options:
+        - SALTDOG
+        - WEBNAVFIT
+        - Homepage
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Paste the link from your address bar.
+      placeholder: https://thepollywog.github.io/saltdog/#/tools/points
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      description: Whatever you know — "Edge on a government laptop" is genuinely useful.
+      placeholder: Edge on a NMCI laptop / Safari on an iPhone
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before submitting
+      options:
+        - label: This report contains no personal information — no name, DoD ID, or screenshot of my own record.
+          required: true

@@ -1,0 +1,23 @@
+# Issue chooser for the whole project.
+#
+# Every Pollywog site files here — SALTDOG and WEBNAVFIT both carry a
+# .github/ISSUE_TEMPLATE/config.yml that redirects to this repo rather than
+# collecting issues of their own. One queue, because the person reporting a dead
+# NSIPS link should not have to work out which of three repositories owns it,
+# and because the same correction often touches two sites.
+#
+# That is why every form below opens with a "Which site" dropdown: centralizing
+# the queue moves the routing problem from the reporter to a required field.
+#
+# Blank issues stay ENABLED. The forms are for people arriving from the sites;
+# the maintainer still needs to be able to jot a one-line note without filling
+# in a form to do it.
+blank_issues_enabled: true
+
+contact_links:
+  - name: Something is wrong on a page — start here
+    url: https://github.com/ThePollywog/thepollywog.github.io/issues/new?template=content-correction.yml
+    about: A dead link, a superseded instruction, a wrong rank or award, out-of-date guidance.
+  - name: Is it already reported?
+    url: https://github.com/ThePollywog/thepollywog.github.io/issues?q=is%3Aissue
+    about: Search open and closed issues before opening a new one.

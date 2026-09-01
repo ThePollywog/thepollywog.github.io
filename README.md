@@ -196,14 +196,46 @@ It also carries `noindex` and **no** `rel=canonical`. A 404 whose canonical
 points at the home page asks a crawler to treat every broken URL as a duplicate
 of the front page, which is how soft-404s get indexed.
 
+## The project's issue queue
+
+`.github/ISSUE_TEMPLATE/` holds the issue forms for **all three sites**. SALTDOG
+and WEBNAVFIT each carry a `config.yml` that turns blank issues off and offers
+only links here, which is GitHub's supported way for a repository to say "not
+here". Disabling Issues in their settings would be blunter and worse: it removes
+the tab, so there is nothing left to redirect *from*.
+
+Centralizing is for the reporter, not the maintainer. Someone who finds a dead
+NSIPS link should not have to work out which of three repositories owns it, and
+one correction often touches two sites. The cost is that a report arrives with no
+repository to identify it — which is why **every form opens with a required
+"Which site" dropdown**, and why `check.mjs` asserts each form offers all three.
+
+Three forms, because people arrive to do three different things:
+
+| Form | For | The field that matters |
+| --- | --- | --- |
+| `content-correction.yml` | A dead link, a superseded instruction, a wrong rank or date | **What says so** — required. These sites are transcriptions of official charts, and a change with no source cannot be told from a guess once the issue is a month old |
+| `feature-request.yml` | A missing system link, reference card, calculator or `go` shortcut | **What do you do today instead** — nearly every feature here started as somebody describing a workaround, and the workaround says more about the fix than a feature name does |
+| `bug.yml` | A page that will not load, a control that does nothing | Browser and device. "Edge on a government laptop" is genuinely useful |
+
+Every form ends with a required personal-data acknowledgement, and `check.mjs`
+asserts it is there. These sites keep what you enter in your browser and transmit
+nothing, so a pasted screenshot of a points record or a ribbon rack is the single
+route by which someone's own data could reach a public issue — the one privacy
+risk the architecture does not already remove.
+
+SALTDOG also links these forms from its own footer, prefilled with the page the
+reporter is on. That coupling is checked on its side: the app and its redirect
+must name the same template files.
+
 ## Verification
 
 ```sh
-node tools/check.mjs      # 24 checks
-node tools/sabotage.mjs   # 50 mutations, all of which must be killed
+node tools/check.mjs      # 30 checks
+node tools/sabotage.mjs   # 59 mutations, all of which must be killed
 ```
 
-24 checks, no dependencies. There is no logic on this page to regression-test;
+30 checks, no dependencies. There is no logic on this page to regression-test;
 every defect it can have is a defect of **agreement** — two copies of the FAQ
 drifting apart, a canonical and an `og:url` naming different origins, a declared
 image size that no longer matches the file, an icon renamed out from under the
@@ -214,7 +246,7 @@ one is the kind of thing a machine should be looking at instead of a person.
 Following the standing practice in this repo, **every check here was run against
 a deliberately broken copy of the file it inspects and watched to fail before it
 was kept** — a check you have never seen fail is a decoration. That is what
-`tools/sabotage.mjs` automates: it applies each of 50 defects to a throwaway copy
+`tools/sabotage.mjs` automates: it applies each of 59 defects to a throwaway copy
 of the folder, runs `check.mjs` against the copy, and reports a **survivor** if
 the run still passes. Every mutation names the check it is meant to kill, so a
 survivor points straight at the assertion to go fix.

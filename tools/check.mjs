@@ -633,3 +633,109 @@ test("the page is navigable and every image is described or hidden", () => {
     assert.ok(levels[i] <= levels[i - 1] + 1, `heading level jumps from h${levels[i - 1]} to h${levels[i]}`);
   }
 });
+
+// ---------------------------------------------------------------------------
+// The project's issue queue
+//
+// Issues for all three sites are filed here, so these templates are the entry
+// point for every report about any of them. SALTDOG and WEBNAVFIT each carry a
+// .github/ISSUE_TEMPLATE/config.yml that redirects to the URLs below, and those
+// URLs name template FILES — so a renamed file here is a 404 in two other
+// repositories, from a link the person reporting a problem just clicked.
+//
+// No YAML parser: this repo has zero dependencies and that is worth more than
+// schema validation GitHub itself performs on push. What is checked is the part
+// GitHub will not catch, which is agreement — between the forms, between each
+// form and the sites it claims to cover, and between the queue's promise to be
+// the only one and the files that would quietly re-open a second.
+// ---------------------------------------------------------------------------
+
+const TEMPLATE_DIR = ".github/ISSUE_TEMPLATE";
+const FORMS = readdirSync(join(ROOT, TEMPLATE_DIR))
+  .filter((f) => f.endsWith(".yml") && f !== "config.yml")
+  .sort();
+const FORM_SRC = new Map(FORMS.map((f) => [f, read(join(TEMPLATE_DIR, f))]));
+
+/** The sites that redirect their issues here, by the name the forms must offer. */
+const SITES = ["SALTDOG", "WEBNAVFIT", "Homepage"];
+
+test("the issue queue offers a form for each thing people arrive to do", () => {
+  // Named explicitly rather than derived from the directory: the point is that
+  // these three exist, and a directory listing compared against itself would
+  // pass just as happily with one of them deleted.
+  assert.deepEqual(FORMS, ["bug.yml", "content-correction.yml", "feature-request.yml"]);
+});
+
+test("every form declares what GitHub needs to render it", () => {
+  for (const [name, src] of FORM_SRC) {
+    for (const key of ["name:", "description:", "labels:", "body:"]) {
+      assert.ok(src.includes(key), `${name} has no top-level ${key}`);
+    }
+    // Every field GitHub can render, and nothing else. A typo in a type is not
+    // a parse error over there — the field is simply dropped from the form.
+    const types = [...src.matchAll(/^ {2}- type: (\S+)/gm)].map((m) => m[1]);
+    // Asserted non-empty because this scan was written against the wrong
+    // indentation the first time: it matched nothing, looped zero times, and
+    // passed. Sabotage found it; the count is what stops it coming back.
+    assert.ok(types.length >= 3, `${name} declares ${types.length} fields`);
+    for (const type of types) {
+      assert.ok(
+        ["markdown", "input", "textarea", "dropdown", "checkboxes"].includes(type),
+        `${name} uses "${type}", which is not an issue-form field type`,
+      );
+    }
+    // Ids address the field in a prefill URL, so a duplicate silently makes one
+    // of the two unaddressable.
+    const ids = [...src.matchAll(/^ {4}id: (\S+)/gm)].map((m) => m[1]);
+    assert.equal(new Set(ids).size, ids.length, `${name} reuses a field id`);
+  }
+});
+
+test("every form asks which site, and offers all of them", () => {
+  // The one cost of a single queue: without this field a report cannot be
+  // routed at all, and the reporter is the only person who still knows.
+  for (const [name, src] of FORM_SRC) {
+    assert.ok(src.includes("    id: site"), `${name} never asks which site`);
+    for (const site of SITES) {
+      assert.ok(src.includes(`        - ${site}`), `${name} does not offer ${site}`);
+    }
+  }
+});
+
+test("a correction cannot be filed without naming what says so", () => {
+  // The site is a transcription of official charts and instructions. A change
+  // with no source cannot be told from a guess once the issue is a month old,
+  // which is the whole reason this field is required rather than encouraged.
+  const src = FORM_SRC.get("content-correction.yml");
+  const start = src.indexOf("    id: source");
+  assert.notEqual(start, -1, "the correction form has no source field at all");
+  // Bounded at the NEXT field, so this cannot pass by finding some later
+  // field's own `required: true`. An unbounded slice is how a check like this ends
+  // up reading the whole rest of the file and always succeeding.
+  const next = src.indexOf("  - type:", start);
+  const field = src.slice(start, next === -1 ? src.length : next);
+  assert.match(field, /required: true/, "the source field on a correction is optional");
+});
+
+test("every form warns against putting personal data in a public issue", () => {
+  // These sites keep what you enter in your browser and transmit nothing, so a
+  // pasted screenshot is the one route by which someone's own points record or
+  // ribbon rack could end up on a public issue.
+  for (const [name, src] of FORM_SRC) {
+    assert.match(
+      src,
+      /no personal information|not attach a screenshot|nothing CUI/i,
+      `${name} does not warn against personal data`,
+    );
+  }
+});
+
+test("the chooser's own links resolve to templates that exist", () => {
+  const config = read(join(TEMPLATE_DIR, "config.yml"));
+  for (const [, template] of config.matchAll(/[?&]template=([\w.-]+)/g)) {
+    assert.ok(FORMS.includes(template), `the chooser links ${template}, which does not exist`);
+  }
+  // This repo keeps blank issues so the maintainer can jot a note; the
+  // satellites are the ones that must not.
+  assert.match(config, /^blank_issues_enabled: true$/m);
+});
