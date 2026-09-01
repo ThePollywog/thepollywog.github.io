@@ -20,9 +20,10 @@ homepage/
 │   ├── index.html      looks up ?to= in links.json and redirects
 │   └── links.json      the shortcut manifest — edit this to add links
 └── tools/
-    ├── build-assets.py generates every binary in assets/
-    ├── check.mjs       node tools/check.mjs — 24 checks, zero dependencies
-    └── sabotage.mjs    breaks the folder 50 ways, asserts check.mjs notices
+    ├── build-assets.py   generates every binary in assets/
+    ├── check.mjs         node tools/check.mjs — 24 checks, zero dependencies
+    ├── sabotage.mjs      breaks the folder 50 ways, asserts check.mjs notices
+    └── sync-go-links.mjs merges a saved MyNavy Portal Quick Links page into go/links.json
 ```
 
 ## Deploying it
@@ -74,8 +75,30 @@ lists every shortcut currently in the manifest.
 bookmark keyword) with keyword `go` and URL
 `https://thepollywog.github.io/go/?to=%s`.
 
-**Add a new shortcut:** edit `go/links.json` — it's a flat `{"key": "url"}`
-map — commit, and push. No build step, no code change.
+**Add one shortcut by hand:** edit `go/links.json` — it's a flat `{"key":
+"url"}` map, sorted by key — commit, and push. No build step, no code change.
+
+**Bulk-add from MyNavy Portal's Quick Links page:** `go/links.json` started
+as a curated pull from MyNavy Portal's own directory of these systems —
+`https://my.navy.mil/quick-links.html` ("Quick Links Classic") — which lists
+the Most Popular Quick Links plus every entry across all four A–Z accordion
+columns. That page isn't fetchable by a script (it 404s outside a logged-in
+browser session), so keeping the manifest current is a manual-in,
+automatic-out loop:
+
+1. Open `https://my.navy.mil/quick-links.html` in a browser and save it
+   (Ctrl+S, "Webpage, HTML only" is enough — the markup is server-rendered).
+2. Run `node tools/sync-go-links.mjs path/to/quick-links.html` — add
+   `--dry-run` first to preview.
+
+It extracts every `(title, URL)` pair from the saved page and merges in
+whatever isn't already in the manifest, matching on URL (ignoring MyNavy
+Portal's `utm_source` tracking param) so it never touches or renames an
+existing hand-picked key like `nsips` or `bol`. New links get an
+auto-generated key from their title (`"Navy eLearning"` → `navyelearning`) —
+rename those to something short by hand afterward, the way that one became
+`nel`. Nothing is ever removed automatically; a link MyNavy Portal drops
+stays in the manifest until someone deletes it on purpose.
 
 ## The canonical-URL hazard
 
