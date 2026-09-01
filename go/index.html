@@ -16,6 +16,7 @@
   <title>go</title>
   <meta name="robots" content="noindex">
   <link rel="preload" href="links.json" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="../assets/logo-320.webp" as="image">
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 
   <style>
@@ -70,6 +71,7 @@
       height: 64px;
       display: block;
       margin: 0 auto 14px;
+      border-radius: 50%;
       /*
         The mark spins ONLY while waiting — it is not a fixed-duration intro
         animation, it is tied to the .loading class JS adds/removes, so on an
@@ -118,11 +120,7 @@
 </head>
 <body class="loading">
   <div class="wrap">
-    <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <!-- A blunt-tailed tadpole silhouette — the same reduced mark as the favicon, at a size a spinner reads at. -->
-      <circle cx="26" cy="26" r="16" fill="var(--accent)"/>
-      <path d="M40 30 Q58 22 60 8 Q46 14 38 30 Z" fill="var(--accent)"/>
-    </svg>
+    <img class="mark" src="../assets/logo-320.webp" width="64" height="64" alt="" aria-hidden="true">
     <p class="wordmark">The Pollywog</p>
     <div id="content">
       <p>Redirecting&hellip;</p>
