@@ -1,7 +1,7 @@
 # thepollywog.github.io — homepage
 
 The landing page for the GitHub Pages **user site** at
-`https://thepollywog.github.io/`. It summarises what the two apps published on
+`https://thepollywog.github.io/`. It summarizes what the two apps published on
 that origin are for and sends people into them.
 
 **Unofficial.** Not a Department of the Navy publication. Nothing here or in
@@ -16,6 +16,9 @@ homepage/
 ├── site.webmanifest    name, theme colour, and the PWA icon set
 ├── .nojekyll           tells Pages to publish the files as-is
 ├── assets/             icons, logo, link-preview card
+├── go/                 browser go-link redirector — see below
+│   ├── index.html      looks up ?to= in links.json and redirects
+│   └── links.json      the shortcut manifest — edit this to add links
 └── tools/
     ├── build-assets.py generates every binary in assets/
     ├── check.mjs       node tools/check.mjs — 24 checks, zero dependencies
@@ -53,51 +56,26 @@ layout or delay the text.
 `check.mjs` asserts the no-JavaScript and no-third-party claims, because both are
 the kind of thing that gets undone in a hurry by something that looks harmless.
 
-## The SEO surface, and what each part is actually worth
+## Go links
 
-Roughly in order of how much it matters:
+`/go/` is a tiny redirector: `go/index.html` reads a `?to=` query parameter,
+looks it up in `go/links.json`, and redirects. Visiting `/go/` with no match
+lists every shortcut currently in the manifest.
 
-| Thing | Why |
-| --- | --- |
-| **Title, 57 chars** | Front-loads the brand — brand queries are the ones this page must own outright — then names the two subjects. Short enough to survive truncation on a phone. |
-| **Meta description, 155 chars** | Written for a human scanning a result list, using the words people type (`Navy Reserve`, `FITREP`, `EVAL`) and spending its last clause on the two differentiators: no account, nothing uploaded. |
-| **Real, substantive copy** | The single largest factor and the one no markup substitutes for. Every claim on the page is specific and checkable. |
-| **One `<h1>`, a sentence** | The wordmark in the masthead is a `<p>` on purpose: spending the one strongest heading signal on a brand string already present in the title, the URL and the OG tags is a waste. |
-| **Semantic structure** | `header` / `main` / `section[aria-labelledby]` / `footer`, headings that never skip a level, a real `<dl>` for the FAQ, real `<a>` elements for every link (there is no JS to intercept a click anyway). |
-| **Speed** | One request, no blocking resources, no layout shift. Core Web Vitals is a real ranking input and this is the cheapest place to win it outright. |
-| **`robots.txt` + `sitemap.xml` at the origin root** | On a user site these are the *only* place they can live for the whole origin — a project repo cannot publish a `robots.txt` a crawler will read. So this folder is what gets those two apps crawled properly. |
-| **Two `Sitemap:` lines** | The root `sitemap.xml` here lists the three sites and is hand-maintained. The second line points at `/saltdog/sitemap.xml`, which SALTDOG's own build generates — a sitemap may only list URLs at or below its own path, so the ~12 static reference pages under `/saltdog/knowledge/` can only be declared from inside that folder, and this `robots.txt` is how a crawler learns that file exists. Multiple `Sitemap:` lines are allowed, and splitting them this way keeps each `<lastmod>` owned by whatever actually knows when the content changed. |
-| **Open Graph + Twitter card** | Not a ranking factor. It is a click-through factor, and it is how the link looks when it is pasted into the group chat where this audience actually shares things. |
-| **`max-image-preview:large`** | The one robots directive that changes anything; without it the preview may be a thumbnail or nothing. |
-| **JSON-LD** | See below — worth having, worth being honest about. |
+**Add it to Chrome (or any Chromium browser):**
 
-### What the structured data is and is not for
+1. Settings → Search engine → Manage search engines → **Add**.
+2. Name: anything, e.g. `go links`.
+3. Shortcut: `go`.
+4. URL: `https://thepollywog.github.io/go/?to=%s`.
+5. In the address bar, type `go nsips`, press Tab or Space, then Enter.
 
-One `@graph` so the nodes reference each other by `@id` instead of repeating
-themselves:
+**Add it to Firefox:** right-click the address bar on `/go/` (or add a
+bookmark keyword) with keyword `go` and URL
+`https://thepollywog.github.io/go/?to=%s`.
 
-- **`WebSite`** — carries `alternateName`, which is how a brand query gets tied
-  to this origin rather than to the amphibian.
-- **`Organization`** — gives the two apps an attributable publisher, and puts
-  *"not affiliated with… the Department of the Navy"* in
-  `disambiguatingDescription`, the field a knowledge panel is most likely to
-  surface.
-- **`SoftwareApplication` ×2** — the substantive entries. `isAccessibleForFree`
-  plus an `Offer` at price `0` **with a currency**; omitting the currency
-  invalidates the offer, and "free" is exactly the case where forgetting it looks
-  harmless.
-- **`FAQPage`** — mirrors the visible `<dl>` exactly.
-
-**The honest expectation for the FAQPage:** Google restricted FAQ rich results to
-authoritative government and health sites in 2023, so this will very likely
-**not** draw a rich result for a site like this one. It is included because it
-costs nothing and still helps a parser pair each question with its answer. It is
-recorded here so nobody later mistakes it for a feature that is quietly broken.
-
-`check.mjs` asserts every question *and answer* in the JSON-LD appears on the
-page as the same text — an equality, not a substring match, because structured
-data that is a superset of the visible page is a manual-action risk rather than
-merely a wasted opportunity.
+**Add a new shortcut:** edit `go/links.json` — it's a flat `{"key": "url"}`
+map — commit, and push. No build step, no code change.
 
 ## The canonical-URL hazard
 
