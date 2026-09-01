@@ -1,46 +1,164 @@
 <!doctype html>
+<!--
+  go/index.html — the go-link redirector.
+
+  SPEED IS THE WHOLE POINT of this file, so the redirect fires the instant
+  links.json resolves: no setTimeout, no minimum display time, no animation
+  gating the JS. `<link rel="preload">` on links.json starts that fetch before
+  the parser even reaches the inline <script>, so on a same-origin cached hit
+  the themed content below never has time to become visible — it only exists
+  for the (rare) slow-network case, or the no-match listing.
+-->
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>go</title>
   <meta name="robots" content="noindex">
+  <link rel="preload" href="links.json" as="fetch" crossorigin="anonymous">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 32rem; margin: 3rem auto; padding: 0 1rem; color: #222; }
-    code { background: #f0f0f0; padding: 0.15rem 0.35rem; border-radius: 0.25rem; }
-    ul { line-height: 1.8; }
-    a { color: #0645ad; }
+    /* Same palette as the homepage — see index.html for the measured ratios. */
+    :root {
+      color-scheme: dark light;
+      --bg: #0e130f;
+      --surface: #171e17;
+      --line: #2c3529;
+      --text: #e6e9e0;
+      --muted: #a9af9f;
+      --accent: #a9b063;
+      --on-accent: #0e130f;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f5f0;
+        --surface: #ffffff;
+        --line: #d7dace;
+        --text: #171e17;
+        --muted: #4a5348;
+        --accent: #5c5b32;
+        --on-accent: #ffffff;
+      }
+    }
+
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    a { color: var(--text); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    .wrap { max-width: 34rem; margin: 0 auto; padding: 32px 20px; text-align: center; }
+
+    .mark {
+      width: 64px;
+      height: 64px;
+      display: block;
+      margin: 0 auto 14px;
+      /*
+        The mark spins ONLY while waiting — it is not a fixed-duration intro
+        animation, it is tied to the .loading class JS adds/removes, so on an
+        instant redirect it never renders a single frame.
+      */
+      animation: spin 1.1s linear infinite;
+      animation-play-state: paused;
+    }
+    .loading .mark { animation-play-state: running; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .mark { animation: none; }
+    }
+
+    .wordmark {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 20px;
+    }
+
+    #content p { margin: 0 0 10px; color: var(--muted); }
+    #content p:last-child { margin-bottom: 0; }
+
+    ul.links {
+      list-style: none;
+      margin: 18px 0 0;
+      padding: 0;
+      text-align: left;
+      display: grid;
+      gap: 8px;
+    }
+    ul.links li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    ul.links a { overflow-wrap: anywhere; }
   </style>
 </head>
-<body>
-  <div id="content">Loading&hellip;</div>
+<body class="loading">
+  <div class="wrap">
+    <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <!-- A blunt-tailed tadpole silhouette — the same reduced mark as the favicon, at a size a spinner reads at. -->
+      <circle cx="26" cy="26" r="16" fill="var(--accent)"/>
+      <path d="M40 30 Q58 22 60 8 Q46 14 38 30 Z" fill="var(--accent)"/>
+    </svg>
+    <p class="wordmark">The Pollywog</p>
+    <div id="content">
+      <p>Redirecting&hellip;</p>
+    </div>
+  </div>
 
   <script>
     (function () {
       var params = new URLSearchParams(location.search);
       var key = (params.get('to') || location.hash.slice(1) || '').trim().toLowerCase();
+      var el = document.getElementById('content');
 
       fetch('links.json')
         .then(function (r) { return r.json(); })
         .then(function (links) {
           if (key && links[key]) {
+            // location.replace, not .href: no redirect entry in browser history.
             location.replace(links[key]);
             return;
           }
+          document.body.classList.remove('loading');
           renderIndex(links, key);
         })
         .catch(function () {
-          document.getElementById('content').textContent = 'Could not load links.json.';
+          document.body.classList.remove('loading');
+          el.innerHTML = '<p>Could not load links.json.</p>';
         });
 
       function renderIndex(links, key) {
-        var el = document.getElementById('content');
         var html = '';
         if (key) {
           html += '<p>No go link for <code>' + escapeHtml(key) + '</code>.</p>';
         }
-        html += '<p>Available go links:</p><ul>';
+        html += '<p>Available go links:</p><ul class="links">';
         Object.keys(links).sort().forEach(function (k) {
-          html += '<li><code>go ' + escapeHtml(k) + '</code> &rarr; <a href="' + escapeHtml(links[k]) + '">' + escapeHtml(links[k]) + '</a></li>';
+          html += '<li><code>go ' + escapeHtml(k) + '</code><a href="' + escapeHtml(links[k]) + '">' + escapeHtml(links[k]) + '</a></li>';
         });
         html += '</ul>';
         el.innerHTML = html;
