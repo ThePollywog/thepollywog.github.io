@@ -15,6 +15,7 @@ homepage/
 ├── sitemap.xml         three URLs: /, /saltdog/, /webnavfit/
 ├── site.webmanifest    name, theme colour, and the PWA icon set
 ├── .nojekyll           tells Pages to publish the files as-is
+├── Makefile            make start / make check / make sabotage
 ├── assets/             icons, logo, link-preview card
 ├── go/                 browser go-link redirector — see below
 │   ├── index.html      looks up ?to= in links.json and redirects
@@ -26,41 +27,11 @@ homepage/
     └── sync-go-links.mjs merges a saved MyNavy Portal Quick Links page into go/links.json
 ```
 
-## Deploying it
+## Go links — set this up first
 
-Copy the contents of this folder to the root of the `ThePollywog.github.io`
-repository and push. There is no build step: what is here is what gets served.
-`/saltdog/` and `/webnavfit/` are published by their own repositories and are not
-part of this folder.
-
-```sh
-node tools/check.mjs                # before every push
-node tools/sabotage.mjs             # after editing check.mjs
-python3 -m http.server 8080         # then open http://localhost:8080/
-```
-
-`check.mjs` needs nothing installed — `node:test` and `node:assert` are built in.
-`build-assets.py` needs Pillow and ImageMagick's `convert`, and only needs to run
-when the artwork changes; its outputs are committed.
-
-## Why it is one hand-written file
-
-The page has two jobs — be found, and load instantly — and both are served by
-one HTTP request producing a fully painted page. So: no framework, no webfont,
-**no JavaScript at all**, no analytics, no cookie banner. The stylesheet is small
-enough to inline whole, which removes the render-blocking request *and* the
-critical-CSS split that would otherwise have to be kept correct. The only
-subresource in the content is the logo — a 7.3 KB WebP (18 KB at 2×) with a PNG
-fallback and explicit dimensions — so there is nothing left that can shift the
-layout or delay the text.
-
-`check.mjs` asserts the no-JavaScript and no-third-party claims, because both are
-the kind of thing that gets undone in a hurry by something that looks harmless.
-
-## Go links
-
-`/go/` is a tiny redirector: `go/index.html` reads a `?to=` query parameter,
-looks it up in `go/links.json`, and redirects. Visiting `/go/` with no match
+`/go/` is a tiny redirector: type `go nsips` in your address bar and land on
+NSIPS. `go/index.html` reads a `?to=` query parameter, looks it up in
+`go/links.json`, and redirects with no delay. Visiting `/go/` with no match
 lists every shortcut currently in the manifest.
 
 **Add it to Chrome (or any Chromium browser):**
@@ -99,6 +70,38 @@ auto-generated key from their title (`"Navy eLearning"` → `navyelearning`) —
 rename those to something short by hand afterward, the way that one became
 `nel`. Nothing is ever removed automatically; a link MyNavy Portal drops
 stays in the manifest until someone deletes it on purpose.
+
+## Deploying it
+
+Copy the contents of this folder to the root of the `ThePollywog.github.io`
+repository and push. There is no build step: what is here is what gets served.
+`/saltdog/` and `/webnavfit/` are published by their own repositories and are not
+part of this folder.
+
+```sh
+make start                          # serves the folder at http://localhost:8629/
+make start PORT=8080                # or pick your own port
+make check                          # before every push — node tools/check.mjs
+make sabotage                       # after editing check.mjs — node tools/sabotage.mjs
+```
+
+`check.mjs` needs nothing installed — `node:test` and `node:assert` are built in.
+`build-assets.py` needs Pillow and ImageMagick's `convert`, and only needs to run
+when the artwork changes; its outputs are committed.
+
+## Why it is one hand-written file
+
+The page has two jobs — be found, and load instantly — and both are served by
+one HTTP request producing a fully painted page. So: no framework, no webfont,
+**no JavaScript at all**, no analytics, no cookie banner. The stylesheet is small
+enough to inline whole, which removes the render-blocking request *and* the
+critical-CSS split that would otherwise have to be kept correct. The only
+subresource in the content is the logo — a 7.3 KB WebP (18 KB at 2×) with a PNG
+fallback and explicit dimensions — so there is nothing left that can shift the
+layout or delay the text.
+
+`check.mjs` asserts the no-JavaScript and no-third-party claims, because both are
+the kind of thing that gets undone in a hurry by something that looks harmless.
 
 ## The canonical-URL hazard
 

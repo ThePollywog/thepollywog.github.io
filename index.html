@@ -216,6 +216,14 @@
         text-decoration-thickness: 2px;
       }
 
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        padding: 0.1rem 0.4rem;
+        border-radius: 3px;
+      }
+
       header.masthead {
         border-bottom: 1px solid var(--line);
         padding: 40px 0 34px;
@@ -350,7 +358,8 @@
       .card > p {
         margin: 0 0 14px;
       }
-      .card ul {
+      .card ul,
+      .card ol {
         margin: 0 0 20px;
         padding-inline-start: 20px;
       }
@@ -359,6 +368,9 @@
       }
       .card li::marker {
         color: var(--accent);
+      }
+      .card p {
+        margin: 0 0 10px;
       }
       .card .go {
         margin-top: auto;
@@ -667,6 +679,35 @@
           at <a href="tel:+18333306622">1-833-330-MNCC</a>.
         </p>
       </aside>
+
+      <!--
+        GO LINKS, placed ahead of the tool cards on purpose: it is the one
+        feature here a reader can start using in the next ten seconds, before
+        they have decided whether either full tool is for them.
+      -->
+      <section id="golinks" aria-labelledby="golinks-h">
+        <p class="eyebrow">Set this up first</p>
+        <h2 id="golinks-h">Type <code>go nsips</code> in your address bar</h2>
+        <p class="sec-note">
+          <a href="go/">/go/</a> is a browser shortcut redirector: add it as a custom search engine
+          once, and typing <code>go</code> plus a keyword jumps straight to a Navy system instead of
+          hunting through MyNavy Portal for it.
+        </p>
+        <div class="card">
+          <p><strong>Chrome (or any Chromium browser):</strong></p>
+          <ol>
+            <li>Settings → Search engine → Manage search engines → <strong>Add</strong>.</li>
+            <li>Name: anything, e.g. <code>go links</code>.</li>
+            <li>Shortcut: <code>go</code>.</li>
+            <li>URL: <code>https://thepollywog.github.io/go/?to=%s</code>.</li>
+            <li>In the address bar, type <code>go nsips</code>, press Tab or Space, then Enter.</li>
+          </ol>
+          <p><strong>Firefox:</strong> right-click the address bar on <a href="go/">/go/</a> (or add a
+          bookmark keyword) with keyword <code>go</code> and URL
+          <code>https://thepollywog.github.io/go/?to=%s</code>.</p>
+          <p class="go"><a class="btn" href="go/">See every go link</a></p>
+        </div>
+      </section>
 
       <section id="tools" aria-labelledby="tools-h">
         <p class="eyebrow">The tools</p>

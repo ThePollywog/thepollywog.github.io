@@ -99,6 +99,7 @@
 
     #content p { margin: 0 0 10px; color: var(--muted); }
     #content p:last-child { margin-bottom: 0; }
+    #content .dest { font-weight: 600; color: var(--text); }
 
     ul.links {
       list-style: none;
@@ -137,6 +138,11 @@
         .then(function (r) { return r.json(); })
         .then(function (links) {
           if (key && links[key]) {
+            // Set the destination text before navigating — costs nothing (it's
+            // the same tick as the replace() below) but shows on the rare slow
+            // redirect instead of a bare "Redirecting...".
+            el.innerHTML = '<p>Redirecting&hellip;</p><p><a class="dest" href="' +
+              escapeHtml(links[key]) + '">' + escapeHtml(key.toUpperCase()) + '</a></p>';
             // location.replace, not .href: no redirect entry in browser history.
             location.replace(links[key]);
             return;
