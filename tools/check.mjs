@@ -406,6 +406,30 @@ test("the favicon svg and the ico are the same mark", () => {
   );
 });
 
+test("go/links.json is a well-formed, sorted, https-only manifest", () => {
+  // This file is the one part of the site meant to be hand-edited directly —
+  // README.md says so — which makes it the one part with no build step to
+  // catch a typo. A stray comma breaks `go/` for every shortcut, not just the
+  // one being edited, so the parse itself is worth asserting, not just assumed.
+  const raw = read("go/links.json");
+  const links = JSON.parse(raw);
+  const keys = Object.keys(links);
+  assert.ok(keys.length > 0, "go/links.json has no entries");
+
+  for (const key of keys) {
+    assert.match(key, /^[a-z0-9]+$/, `key "${key}" must be lowercase letters and digits only`);
+    const dest = links[key];
+    assert.equal(typeof dest, "string", `"${key}" does not map to a string`);
+    assert.match(dest, /^https:\/\//, `"${key}" -> "${dest}" is not an https:// URL`);
+  }
+
+  // README documents the file as "sorted by key" — asserted here so that
+  // claim stays true instead of just being the state of the file the day it
+  // was written.
+  const sorted = [...keys].sort();
+  assert.deepEqual(keys, sorted, "go/links.json keys are not sorted alphabetically");
+});
+
 // ---------------------------------------------------------------------------
 // Claims the page makes about itself
 // ---------------------------------------------------------------------------

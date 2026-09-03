@@ -22,7 +22,7 @@ homepage/
 │   └── links.json      the shortcut manifest — edit this to add links
 └── tools/
     ├── build-assets.py   generates every binary in assets/
-    ├── check.mjs         node tools/check.mjs — 24 checks, zero dependencies
+    ├── check.mjs         node tools/check.mjs — 31 checks, zero dependencies
     ├── sabotage.mjs      breaks the folder 50 ways, asserts check.mjs notices
     └── sync-go-links.mjs merges a saved MyNavy Portal Quick Links page into go/links.json
 ```

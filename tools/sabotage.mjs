@@ -250,6 +250,27 @@ const MUTATIONS = [
     from: '<g fill="#A9B063">',
     to: '<g fill="#7A8048">',
   },
+  {
+    label: "a go-link key is hand-edited with a capital letter",
+    kills: "go/links.json is a well-formed, sorted, https-only manifest",
+    file: "go/links.json",
+    from: '"nsips": "https://www.nsips.cloud.navy.mil/",',
+    to: '"NSIPS": "https://www.nsips.cloud.navy.mil/",',
+  },
+  {
+    label: "a go-link destination is pasted without its scheme",
+    kills: "go/links.json is a well-formed, sorted, https-only manifest",
+    file: "go/links.json",
+    from: '"nsips": "https://www.nsips.cloud.navy.mil/",',
+    to: '"nsips": "www.nsips.cloud.navy.mil/",',
+  },
+  {
+    label: "a new go-link is appended out of alphabetical order",
+    kills: "go/links.json is a well-formed, sorted, https-only manifest",
+    file: "go/links.json",
+    from: '"zipserve": "https://locker.private.navyreserve.navy.mil/zipserve/?utm_source=mnp%20public"',
+    to: '"zipserve": "https://locker.private.navyreserve.navy.mil/zipserve/?utm_source=mnp%20public",\n  "aaa": "https://example.com/"',
+  },
 
   // --- claims the page makes about itself ---
   {
@@ -381,8 +402,8 @@ const MUTATIONS = [
     label: "a section heading skips from h1 to h3",
     kills: "the page is navigable and every image is described or hidden",
     file: "index.html",
-    from: '<h2 id="tools-h">Two sites, one job each</h2>',
-    to: '<h3 id="tools-h">Two sites, one job each</h3>',
+    from: '<h2 id="golinks-h">Type <code>go nsips</code> in your address bar</h2>',
+    to: '<h3 id="golinks-h">Type <code>go nsips</code> in your address bar</h3>',
   },
   {
     label: "the decorative 404 image is un-hidden while keeping an empty alt",
