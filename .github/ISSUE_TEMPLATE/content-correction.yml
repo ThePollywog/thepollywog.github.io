@@ -12,7 +12,7 @@ body:
         made without one cannot be told apart from a guess six months later.
 
         **Nothing here is a system of record.** If you need something fixed in
-        your own record, that is NSIPS or your NOSC, not this form.
+        your own record, that is NSIPS or your NRC, not this form.
   - type: dropdown
     id: site
     attributes:

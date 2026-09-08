@@ -1,292 +1,162 @@
-# thepollywog.github.io — homepage
+# Navy supporting tool and information
 
-The landing page for the GitHub Pages **user site** at
-`https://thepollywog.github.io/`. It summarizes what the two apps published on
-that origin are for and sends people into them.
+Tools for U.S. Navy Sailors — built to simplify routine administrative tasks and questions.
 
-**Unofficial.** Not a Department of the Navy publication. Nothing here or in
-either app is a system of record.
+No account. No install. No server. Nothing you type ever leaves your machine.
 
-```
-homepage/
-├── index.html          the page — markup, inline CSS, structured data
-├── 404.html            served for every unresolved path on the whole origin
-├── robots.txt          crawl policy for the whole origin; names both sitemaps
-├── sitemap.xml         three URLs: /, /saltdog/, /webnavfit/
-├── site.webmanifest    name, theme colour, and the PWA icon set
-├── .nojekyll           tells Pages to publish the files as-is
-├── Makefile            make start / make check / make sabotage
-├── assets/             icons, logo, link-preview card
-├── go/                 browser go-link redirector — see below
-│   ├── index.html      looks up ?to= in links.json and redirects
-│   └── links.json      the shortcut manifest — edit this to add links
-└── tools/
-    ├── build-assets.py   generates every binary in assets/
-    ├── check.mjs         node tools/check.mjs — 31 checks, zero dependencies
-    ├── sabotage.mjs      breaks the folder 50 ways, asserts check.mjs notices
-    └── sync-go-links.mjs merges a saved MyNavy Portal Quick Links page into go/links.json
-```
+> **Unofficial.** The Pollywog is an independent project. It is not affiliated with, endorsed by,
+> or a publication of the Department of the Navy, and nothing here is a system of record.
+>
+> Verify anything you act on against the official source, your NRC, or MyNavy Career Center at
+> [1-833-330-MNCC](tel:+18333306622).
 
-## Go links — set this up first
+<!-- section id=golinks eyebrow="Set this up first" -->
 
-`/go/` is a tiny redirector: type `go nsips` in your address bar and land on
-NSIPS. `go/index.html` reads a `?to=` query parameter, looks it up in
-`go/links.json`, and redirects with no delay. Visiting `/go/` with no match
-lists every shortcut currently in the manifest.
+## Enable `go website` in your browser address bar
 
-**Add it to Chrome (or any Chromium browser):**
+[/go/](go/) is a browser shortcut redirector: add it as a custom search engine once, and typing
+`go` plus a keyword jumps straight to a Navy system instead of hunting through MyNavy Portal for it.
+
+<!-- card -->
+
+**Chrome (or any Chromium browser):**
 
 1. Settings → Search engine → Manage search engines → **Add**.
 2. Name: anything, e.g. `go links`.
 3. Shortcut: `go`.
 4. URL: `https://thepollywog.github.io/go/?to=%s`.
-5. In the address bar, type `go nsips`, press Tab or Space, then Enter.
+5. In the address bar, type `go nsips`, press Enter.
 
-**Add it to Firefox:** right-click the address bar on `/go/` (or add a
-bookmark keyword) with keyword `go` and URL
-`https://thepollywog.github.io/go/?to=%s`.
+**Firefox:** right-click the address bar on [/go/](go/) (or add a bookmark keyword) with keyword
+`go` and URL `https://thepollywog.github.io/go/?to=%s`.
 
-**Add one shortcut by hand:** edit `go/links.json` — it's a flat `{"key":
-"url"}` map, sorted by key — commit, and push. No build step, no code change.
+[See every go link](go/)
 
-**Bulk-add from MyNavy Portal's Quick Links page:** `go/links.json` started
-as a curated pull from MyNavy Portal's own directory of these systems —
-`https://my.navy.mil/quick-links.html` ("Quick Links Classic") — which lists
-the Most Popular Quick Links plus every entry across all four A–Z accordion
-columns. That page isn't fetchable by a script (it 404s outside a logged-in
-browser session), so keeping the manifest current is a manual-in,
-automatic-out loop:
+<!-- /card -->
+<!-- /section -->
 
-1. Open `https://my.navy.mil/quick-links.html` in a browser and save it
-   (Ctrl+S, "Webpage, HTML only" is enough — the markup is server-rendered).
-2. Run `node tools/sync-go-links.mjs path/to/quick-links.html` — add
-   `--dry-run` first to preview.
+<!-- section id=tools eyebrow="The tools" -->
 
-It extracts every `(title, URL)` pair from the saved page and merges in
-whatever isn't already in the manifest, matching on URL (ignoring MyNavy
-Portal's `utm_source` tracking param) so it never touches or renames an
-existing hand-picked key like `nsips` or `bol`. New links get an
-auto-generated key from their title (`"Navy eLearning"` → `navyelearning`) —
-rename those to something short by hand afterward, the way that one became
-`nel`. Nothing is ever removed automatically; a link MyNavy Portal drops
-stays in the manifest until someone deletes it on purpose.
+## WebNAVFIT and SaltDog
 
-## Deploying it
+<!-- card -->
 
-Copy the contents of this folder to the root of the `ThePollywog.github.io`
-repository and push. There is no build step: what is here is what gets served.
-`/saltdog/` and `/webnavfit/` are published by their own repositories and are not
-part of this folder.
+### [SALTDOG](saltdog/)
 
-```sh
-make start                          # serves the folder at http://localhost:8629/
-make start PORT=8080                # or pick your own port
-make check                          # before every push — node tools/check.mjs
-make sabotage                       # after editing check.mjs — node tools/sabotage.mjs
-```
+A condensed quick-reference desk for Navy Sailors: where the references are, supporting information, and readiness
+information.
 
-`check.mjs` needs nothing installed — `node:test` and `node:assert` are built in.
-`build-assets.py` needs Pillow and ImageMagick's `convert`, and only needs to run
-when the artwork changes; its outputs are committed.
+- A directory of the systems a SELRES actually touches — NSIPS, BOL, MyNavy Portal, milConnect and the rest — each
+  marked CAC-required or open
+- An annual checklist where every item links the application that completes it
+- [One-page reference cards](saltdog/knowledge/): ranks and insignia for all six services, awards precedence, combatant
+  commands, numbered fleets, joint staff codes, the phonetic alphabet, and Navy customs and courtesies
+- Readiness math — retirement points and good years, EVAL and FITREP due dates, a ribbon rack in order of precedence
+- An offline keyword search across every card. Not an AI, no network calls
 
-## Why it is one hand-written file
+[Open SALTDOG](saltdog/)
 
-The page has two jobs — be found, and load instantly — and both are served by
-one HTTP request producing a fully painted page. So: no framework, no webfont,
-**no JavaScript at all**, no analytics, no cookie banner. The stylesheet is small
-enough to inline whole, which removes the render-blocking request *and* the
-critical-CSS split that would otherwise have to be kept correct. The only
-subresource in the content is the logo — a 7.3 KB WebP (18 KB at 2×) with a PNG
-fallback and explicit dimensions — so there is nothing left that can shift the
-layout or delay the text.
+<!-- /card -->
+<!-- card -->
 
-`check.mjs` asserts the no-JavaScript and no-third-party claims, because both are
-the kind of thing that gets undone in a hurry by something that looks harmless.
+### [WEBNAVFIT](webnavfit/)
 
-## The canonical-URL hazard
+A browser reconstruction of NAVFIT98A for drafting performance evaluations and printing the official form.
 
-Five files hardcode `https://thepollywog.github.io` because the specs give no
-choice: `rel=canonical`, `og:url`, `og:image`, `twitter:image`, the JSON-LD
-`@id`/`url` fields, every `<loc>` in `sitemap.xml`, and the `Sitemap:` line in
-`robots.txt` all require an absolute URL.
+- FITREP, EVAL and Chief Eval entry with the correct traits for each report type
+- Live trait averaging, RSCA, and promotion-recommendation summary as you type
+- Output onto the real NAVPERS 1610/2 — drawn at the sizes and positions eNavFit uses, so the printed form matches
+- Summary groups organised by reporting senior and reporting period
+- Everything stored in your browser, exportable to a single file you keep
 
-**If this site ever moves to a custom domain, those are the first thing to
-change, and a canonical tag left pointing at the old host is the most expensive
-mistake available here** — it explicitly instructs Google to index the other URL
-instead of yours.
+[Open WEBNAVFIT](webnavfit/)
 
-The duplication cannot be removed, so `check.mjs` makes a disagreement fail
-loudly instead: it finds every URL matching `https?://…pollywog…` across all six
-files and asserts each one equals a single `ORIGIN` constant. Change the constant
-and the failures list exactly which files still say the old thing. The pattern is
-deliberately loose enough to catch a stray `www.`, a bare `http://`, or a
-half-finished domain migration, and there is a guard asserting it matched more
-than twelve references so that a rename cannot make the check pass by finding
-nothing.
+<!-- /card -->
+<!-- /section -->
 
-## Assets
+<!-- section id=how eyebrow="How they work" -->
 
-`tools/build-assets.py` generates every binary from two committed sources:
-`assets/logo-512.png` (the patch artwork, trimmed to a transparent circle) and
-`assets/favicon.svg` (a hand-authored simplified mark). 512 is the smallest size
-everything else derives from without upscaling — the largest consumer is the
-512 px icon at an 0.88 inset — so it is the source of record. `--from PATH`
-re-derives it from the original artwork, which lives outside this folder and is
-deliberately not committed here.
+## Static pages, on purpose
 
-Decisions the generated files embody:
+Both tools are static files. There is no application server anywhere in the picture, and that constraint decided most of
+what they are and their functionality.
 
-- **The favicon is not the patch.** The patch is a detailed illustration —
-  helmeted tadpole, pond, ring of lettering — and at the 16 px a tab actually
-  rasterizes, all of it collapses into an olive smudge. Five candidate marks were
-  rendered at 96/32/16 and compared; the surviving one is a blunt-tailed tadpole
-  silhouette. Two rejected variants are recorded in `favicon.svg` because they
-  were the *obvious* ideas and both failed: a comma-shaped tail with an eye reads
-  as a comet, and a tapering swept tail reads as a trumpet.
-- **A tadpole, not an anchor.** SALTDOG's favicon is an anchor; two tabs from the
-  same origin showing the same glyph is worse than no glyph.
-- **`favicon.ico` is rasterized from `favicon.svg`** by the build script, so the
-  tab icon and its fallback cannot drift apart.
-- **The icons are opaque tiles.** iOS composites an apple-touch icon onto white
-  and Android onto whatever the launcher feels like, so a transparent dark-green
-  tadpole would land on a white field roughly half the time.
-- **One maskable icon at a 0.62 inset**, because Android may crop to a circle
-  inscribed in 80% of the tile and will otherwise shave the artwork. `check.mjs`
-  asserts exactly one exists and that every declared `sizes` matches the file's
-  actual pixel dimensions, read out of the PNG header.
-- **`display: "browser"` in the manifest.** A link hub is not an app; claiming
-  `standalone` would make Chrome offer to install a page whose whole content is
-  two outbound links. The manifest is there for the name, the theme colour and
-  the icons, not for installability. (JSON has no comments, which is why this
-  note is here.)
-- **The link-preview card carries the disclaimer.** A preview is frequently the
-  whole of what someone sees before deciding whether this is an official Navy
-  resource, and it gets pasted into group chats stripped of all other context.
+- **Nothing is uploaded** — Your points, your checklist, your drafts: all of it lives in your own browser's storage.
+  There is nowhere to send it to and no analytics monitoring activity.
+- **They keep working with no signal** — Once a page has loaded it needs no network.
+- **Every fact names its source** — Reference pages cite the instruction behind them and link the original PDF, so a
+  transcription can be checked against the chart it came from instead of trusted.
+- **They say when they do not know** — SALTDOG's search returns an honest "I don't have that" and points you at MyNavy
+  HR or MNCC rather than inventing a plausible answer.
 
-## Palette
+<!-- /section -->
 
-Taken from the patch artwork rather than invented, and every pair measured.
-`index.html` records the contrast ratio next to each token. The one number that
-decided the scheme: the patch's own olive lettering is `#5C5B32`, which is
-**2.68:1** on the dark background and fails outright — so the dark theme uses a
-brightened `#A9B063` (8.11:1) and the light theme uses the original (6.39:1).
+<!-- section id=faq eyebrow="Questions" -->
 
-Each accent is unusable in the other theme (`#A9B063` is 2.11:1 on the light
-background), which is the same trap SALTDOG documents for navy-and-gold. So:
-**the olive accent never carries body text in either theme** — it carries
-headings, rules, and its own inverted button label.
+## The things people ask first
 
-`check.mjs` recomputes every ratio from the stylesheet rather than trusting the
-comments, and separately asserts that the two accents have *not* converged onto
-one shared value, which is the obvious "simplification" that would break both
-themes at once. It also checks that the palette literals in `build-assets.py`
-still match the CSS, because the link-preview card is drawn in Python and the
-page in CSS, and the only place the two are ever seen side by side is a link
-unfurl — the least likely place to notice they have drifted.
+### Is this an official Navy website?
 
-## 404.html breaks the folder's own rules, deliberately
+No. The Pollywog is an independent project with no affiliation to the Department of the Navy, BUPERS, or any command.
+Nothing here is a system of record. Verify anything you act on against the official source, your NRC, or MyNavy Career
+Center at 1-833-330-MNCC.
 
-Every path in `index.html` is relative. Every path in `404.html` is
-**root-absolute**, because Pages serves that file *at the URL that failed*: a
-request for `/saltdog/nope` renders it while the browser still believes the base
-is `/saltdog/`, so a relative `assets/favicon.svg` would be fetched from
-`/saltdog/assets/` and 404 in turn. Root-absolute is the only form that resolves
-from every path — and it is precisely what makes that one file non-portable to a
-subdirectory deployment. `check.mjs` asserts the distinction in both directions
-rather than trusting it.
+### Do I need an account, a CAC, or a download?
 
-It also carries `noindex` and **no** `rel=canonical`. A 404 whose canonical
-points at the home page asks a crawler to treat every broken URL as a duplicate
-of the front page, which is how soft-404s get indexed.
+None of the three. Both tools are static web pages: you open a link and they run. There is no sign-in, no install, and
+no server to send anything to. The Navy systems these tools point you at still need a CAC, but the tools themselves do
+not.
 
-## The project's issue queue
+### Where does my data go?
 
-`.github/ISSUE_TEMPLATE/` holds the issue forms for **all three sites**. SALTDOG
-and WEBNAVFIT each carry a `config.yml` that turns blank issues off and offers
-only links here, which is GitHub's supported way for a repository to say "not
-here". Disabling Issues in their settings would be blunter and worse: it removes
-the tab, so there is nothing left to redirect *from*.
+Nowhere. Everything you type stays in your own browser's local storage, and both tools can export it to a file you keep.
+There is no backend, no analytics, and no tracking. Clearing your browser's site data erases it, so export anything you
+want to keep.
 
-Centralizing is for the reporter, not the maintainer. Someone who finds a dead
-NSIPS link should not have to work out which of three repositories owns it, and
-one correction often touches two sites. The cost is that a report arrives with no
-repository to identify it — which is why **every form opens with a required
-"Which site" dropdown**, and why `check.mjs` asserts each form offers all three.
+### How many retirement points make a good year?
 
-Three forms, because people arrive to do three different things:
+At least 50 retirement points in your anniversary year, of which 15 come automatically from a full year of membership.
+[SALTDOG's points tracker](saltdog/#/tools/points) does the arithmetic against your anniversary date rather than the
+fiscal or calendar year, which is where hand calculations usually go wrong. Your NSIPS Electronic Service Record remains
+the record of truth.
 
-| Form | For | The field that matters |
-| --- | --- | --- |
-| `content-correction.yml` | A dead link, a superseded instruction, a wrong rank or date | **What says so** — required. These sites are transcriptions of official charts, and a change with no source cannot be told from a guess once the issue is a month old |
-| `feature-request.yml` | A missing system link, reference card, calculator or `go` shortcut | **What do you do today instead** — nearly every feature here started as somebody describing a workaround, and the workaround says more about the fix than a feature name does |
-| `bug.yml` | A page that will not load, a control that does nothing | Browser and device. "Edge on a government laptop" is genuinely useful |
+### Can I submit a FITREP or EVAL from WEBNAVFIT?
 
-Every form ends with a required personal-data acknowledgement, and `check.mjs`
-asserts it is there. These sites keep what you enter in your browser and transmit
-nothing, so a pasted screenshot of a points record or a ribbon rack is the single
-route by which someone's own data could reach a public issue — the one privacy
-risk the architecture does not already remove.
+No. WEBNAVFIT is a drafting and printing aid. It produces a filled NAVPERS 1610/2 you can print, sign, or hand off, but
+submission still happens with your unit. It exists because drafting in the official tool is painful and because a draft
+should be simple.
 
-SALTDOG also links these forms from its own footer, prefilled with the page the
-reporter is on. That coupling is checked on its side: the app and its redirect
-must name the same template files.
+### Does any of this work offline?
 
-## Verification
+Yes. Once a page has loaded, everything in it runs locally, including SALTDOG's reference search — it is keyword
+retrieval over the site's own cards, not a chatbot calling an API. That is deliberate: drill weekends happen in
+buildings with no signal.
 
-```sh
-node tools/check.mjs      # 30 checks
-node tools/sabotage.mjs   # 59 mutations, all of which must be killed
-```
+### Why "pollywog"?
 
-30 checks, no dependencies. There is no logic on this page to regression-test;
-every defect it can have is a defect of **agreement** — two copies of the FAQ
-drifting apart, a canonical and an `og:url` naming different origins, a declared
-image size that no longer matches the file, an icon renamed out from under the
-manifest, a contrast ratio in a comment for a colour that has changed. None of
-those break the page visibly, all of them are invisible in a browser, and every
-one is the kind of thing a machine should be looking at instead of a person.
+In the line-crossing ceremony, a Sailor who has not yet crossed the equator is a pollywog; one who has is a shellback.
+Us pollywogs are still figuring out where everything is.
 
-Following the standing practice in this repo, **every check here was run against
-a deliberately broken copy of the file it inspects and watched to fail before it
-was kept** — a check you have never seen fail is a decoration. That is what
-`tools/sabotage.mjs` automates: it applies each of 59 defects to a throwaway copy
-of the folder, runs `check.mjs` against the copy, and reports a **survivor** if
-the run still passes. Every mutation names the check it is meant to kill, so a
-survivor points straight at the assertion to go fix.
+<!-- /section -->
 
-### What that discipline actually caught
+<!-- section id=official eyebrow="Go to the source" -->
 
-Not a single defect in the page. **Four checks that were reading this folder's
-own explanatory comments instead of its markup** — which is the specific hazard
-of a house style that comments heavily, because a comment discussing `<dt>` or
-`outline: none` or `#A9B063` contains the exact string the naive check is
-grepping for:
+## Official Navy systems
 
-- Three failed on the **first run** of `check.mjs`. The FAQ check's question
-  regex matched from inside the file's head comment to the first real `</dt>`;
-  the focus-ring check was satisfied by a CSS comment reading *"Never `outline:
-  none`"*; and the third-party-subresource check flagged `<link rel="canonical">`
-  because its heuristic was "a `<link>` with an absolute href" rather than "a
-  `<link>` that fetches something".
-- The fourth **passed** and was only exposed when sabotage repainted the
-  favicon's tadpole a different olive and the mutation **survived**:
-  `assert.match(svg, /#A9B063/i)` was being satisfied by `favicon.svg`'s own
-  comment explaining where that colour comes from. This is the worse of the two
-  outcomes and the reason the sabotage harness exists at all.
+The systems of record. Most require a CAC. If something on either tool disagrees with one of these, the system is right.
 
-The fix is `stripComments()` for HTML and SVG and `styleOf()` for the inlined
-stylesheet, applied once at the top of `check.mjs` so no later check can forget;
-the favicon check now compares the *set* of `fill=` attributes against the dark
-palette's tokens with `deepEqual`, which cannot be satisfied by prose.
+- [MyNavy HR](https://www.mynavyhr.navy.mil/) — Policy, instructions, NAVADMINs, pay and personnel references.
+- [MyNavy Portal](https://my.navy.mil/) — Single sign-on hub to career and administrative applications.
+- [NSIPS](https://www.nsips.cloud.navy.mil/) — Electronic Service Record, training, pay and leave.
+- [BUPERS Online](https://www.bol.navy.mil/) — Official and performance summary records, orders, boards.
+- [milConnect](https://milconnect.dmdc.osd.mil/milconnect/) — DEERS, ID cards, dependents, SGLI.
+- [MyNavy Career Center — 1-833-330-MNCC](tel:+18333306622) — The help desk to call when nothing online answers it.
 
-### Manual verification, for the things a checker cannot see
+<!-- /section -->
 
-Both pages were rendered in headless Chrome with `prefers-color-scheme` forced
-each way, at 320–1440 px wide, with console errors and warnings treated as
-failures: no console output, no horizontal overflow at any width, and both
-schemes read correctly. Two defects were found this way and by no other means —
-the pale rim around the logo on the link-preview card (the circular mask was
-keeping the original artwork's antialiased outer edge, a blend toward the white
-page it was drawn on, invisible on white and obvious on the dark card; fixed by
-the generator's `BLEED` inset), and the rasterised `favicon.ico`, which had to be
-looked at at 16, 32 and 48 px to confirm it still reads as a tadpole.
+---
+
+This file is also the source `index.html` is generated from — run `make build` after editing it (`make check` verifies
+the two haven't drifted apart). See `tools/build-index.mjs` for the small, purpose-built markdown reader that maps the
+sections above onto the page's markup, and
+`tools/index.template.html` for the head, masthead, and footer that live outside this content.

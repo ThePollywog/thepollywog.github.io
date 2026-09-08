@@ -1,0 +1,13 @@
+{
+  "name": "thepollywog.github.io",
+  "private": true,
+  "version": "1.0.0",
+  "description": "The landing page for thepollywog.github.io. Plain static HTML/CSS, zero framework, zero JavaScript on the page itself — vite here is a dev-server-with-live-reload convenience only, not a bundler for it.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}

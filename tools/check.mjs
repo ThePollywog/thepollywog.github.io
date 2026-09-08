@@ -35,6 +35,7 @@ import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { build as buildIndex } from "./build-index.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
@@ -428,6 +429,21 @@ test("go/links.json is a well-formed, sorted, https-only manifest", () => {
   // was written.
   const sorted = [...keys].sort();
   assert.deepEqual(keys, sorted, "go/links.json keys are not sorted alphabetically");
+});
+
+test("index.html is generated from README.md, and the two have not drifted", () => {
+  // README.md is the source of the page's visible copy; index.html is the
+  // committed OUTPUT of tools/build-index.mjs. Someone editing index.html by
+  // hand instead of README.md — or editing README.md and forgetting to
+  // rebuild — is exactly the failure this exists to catch, the same way the
+  // asset-builder checks catch a binary edited without its source.
+  const fresh = buildIndex();
+  const committed = readFileSync(join(ROOT, "index.html"), "utf8");
+  assert.equal(
+    fresh,
+    committed,
+    "index.html does not match `node tools/build-index.mjs` — run it and commit the result",
+  );
 });
 
 // ---------------------------------------------------------------------------

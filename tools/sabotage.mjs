@@ -182,8 +182,8 @@ const MUTATIONS = [
     label: "a visible FAQ entry is deleted but left in the JSON-LD",
     kills: "every FAQ answer in the structured data is on the page verbatim",
     file: "index.html",
-    from: "          <dt>Does any of this work offline?</dt>",
-    to: "          <dt hidden>Does any of this work offline?</dt>",
+    from: "<dt>Does any of this work offline?</dt>",
+    to: "<dt hidden>Does any of this work offline?</dt>",
   },
 
   // --- the disclaimer ---
@@ -270,6 +270,13 @@ const MUTATIONS = [
     file: "go/links.json",
     from: '"zipserve": "https://locker.private.navyreserve.navy.mil/zipserve/?utm_source=mnp%20public"',
     to: '"zipserve": "https://locker.private.navyreserve.navy.mil/zipserve/?utm_source=mnp%20public",\n  "aaa": "https://example.com/"',
+  },
+  {
+    label: "index.html is hand-edited without touching its README.md source",
+    kills: "index.html is generated from README.md, and the two have not drifted",
+    file: "index.html",
+    from: "<h1>Navy paperwork, without the scavenger hunt</h1>",
+    to: "<h1>Navy paperwork, without the scavenger hunt!</h1>",
   },
 
   // --- claims the page makes about itself ---
