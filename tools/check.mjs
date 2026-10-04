@@ -162,9 +162,9 @@ test("robots.txt advertises the sitemap and blocks nothing", () => {
   assert.match(ROBOTS, /^User-agent: \*$/m);
 });
 
-test("the sitemap lists all three sites, with a real lastmod", () => {
+test("the sitemap lists all four sites, with a real lastmod", () => {
   const locs = [...SITEMAP.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  assert.deepEqual(locs, [`${ORIGIN}/`, `${ORIGIN}/saltdog/`, `${ORIGIN}/webnavfit/`]);
+  assert.deepEqual(locs, [`${ORIGIN}/`, `${ORIGIN}/saltdog/`, `${ORIGIN}/webnavfit/`, `${ORIGIN}/pdf-wizard/`]);
   const mods = [...SITEMAP.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
   assert.equal(mods.length, locs.length, "every <url> needs a <lastmod>");
   for (const d of mods) {
@@ -251,7 +251,7 @@ test("the JSON-LD parses and every node is typed and identified", () => {
   }
   assert.equal(
     types.filter((t) => t === "SoftwareApplication").length,
-    2,
+    3,
     "expected one SoftwareApplication per app",
   );
 });
@@ -332,7 +332,7 @@ test("the page says it is unofficial, early and in every machine-readable field"
  * on disk. Listed explicitly rather than skipped by a pattern, so that adding a
  * third app is a deliberate edit here and not a silently unchecked link.
  */
-const EXTERNAL_DIRS = ["saltdog/", "webnavfit/"];
+const EXTERNAL_DIRS = ["saltdog/", "webnavfit/", "pdf-wizard/"];
 
 test("every local reference in index.html resolves to a file", () => {
   const refs = [...HTML.matchAll(/(?:href|src|srcset)=["']([^"']+)["']/g)].flatMap((m) =>

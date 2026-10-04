@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Three URLs, one per site on the origin. This file is at the domain root, which
+  Four URLs, one per site on the origin. This file is at the domain root, which
   on a GitHub Pages user site is the only place a sitemap can cover the project
-  repos published alongside it — /saltdog/ and /webnavfit/ have no way to
+  repos published alongside it — /saltdog/, /webnavfit/ and /pdf-wizard/ have no way to
   publish a sitemap that a crawler will trust for the whole origin.
 
   DEEP LINKS ARE DELIBERATELY ABSENT. Both apps are hash-routed single-page
   applications, so every page inside them is …/saltdog/#/knowledge/ranks — and
   a fragment is not part of a URL as far as a crawler is concerned. Listing them
-  would submit the same three URLs over and over and dilute the file for no
+  would submit the same four URLs over and over and dilute the file for no
   gain. Getting those pages indexed individually would require pre-rendering, a
   real decision with real cost, and it is not one this sitemap can fake.
 
@@ -30,5 +30,9 @@
   <url>
     <loc>https://thepollywog.github.io/webnavfit/</loc>
     <lastmod>2026-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://thepollywog.github.io/pdf-wizard/</loc>
+    <lastmod>2026-09-30</lastmod>
   </url>
 </urlset>

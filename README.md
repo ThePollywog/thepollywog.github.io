@@ -37,7 +37,7 @@ No account. No install. No server. Nothing you type ever leaves your machine.
 
 <!-- section id=tools eyebrow="The tools" -->
 
-## WebNAVFIT and SaltDog
+## WebNAVFIT, SaltDog and PDF Wizard
 
 <!-- card -->
 
@@ -70,6 +70,37 @@ A browser reconstruction of NAVFIT98A for drafting performance evaluations and p
 - Everything stored in your browser, exportable to a single file you keep
 
 [Open WEBNAVFIT](webnavfit/)
+
+<!-- /card -->
+<!-- card -->
+
+### [PDF WIZARD](pdf-wizard/)
+
+A PDF viewer and editor for administrative paperwork, with CAC digital signing.
+
+- View, fill forms, comment, draw, edit text and images, organise pages, protect and redact
+- Sign with a CAC — fill empty signature fields or draw new ones, and several people can sign the same form in turn
+  without invalidating the signatures already on it
+- Check signatures against the DoD PKI root and issuing CAs, bundled with the app
+- Files kept in your browser's storage, with the last 10 versions of each
+- CAC signing needs a small browser extension and helper installed on the computer; everything else needs nothing
+
+[Open PDF WIZARD](pdf-wizard/)
+
+<!-- /card -->
+<!-- card -->
+
+### [HOW TO POLLYWOG on YouTube](https://www.youtube.com/@HowToPollywog)
+
+Narrated, captioned explainer videos that walk through Navy training material one idea at a time.
+
+- Series built from public Navy references — radar and electronic warfare fundamentals, NEETS electronics modules, and
+  more
+- Each scene carries one concept, with the numbers worked through on screen rather than just stated
+- Burned-in captions and a separate caption track, so they work with the sound off
+- Free to watch, no account needed
+
+[Watch on YouTube](https://www.youtube.com/@HowToPollywog)
 
 <!-- /card -->
 <!-- /section -->

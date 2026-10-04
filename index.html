@@ -495,7 +495,7 @@
             "url": "https://thepollywog.github.io/",
             "logo": "https://thepollywog.github.io/assets/icon-512.png",
             "disambiguatingDescription": "An independent, unofficial project. Not affiliated with, endorsed by, or a publication of the U.S. Department of the Navy.",
-            "sameAs": ["https://github.com/ThePollywog"]
+            "sameAs": ["https://github.com/ThePollywog", "https://www.youtube.com/@HowToPollywog"]
           },
           {
             "@type": "SoftwareApplication",
@@ -536,6 +536,26 @@
               "Exact NAVPERS 1610/2 PDF output",
               "Summary groups by reporting senior and reporting period",
               "Local-only storage with JSON export and import"
+            ],
+            "publisher": { "@id": "https://thepollywog.github.io/#org" }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://thepollywog.github.io/#pdf-wizard",
+            "name": "PDF WIZARD",
+            "url": "https://thepollywog.github.io/pdf-wizard/",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Any modern web browser",
+            "browserRequirements": "Requires JavaScript. Runs entirely client-side; documents are never uploaded. CAC signing requires the PDF Wizard extension for Chrome or Edge and its native helper.",
+            "description": "A browser-based PDF viewer and editor for administrative paperwork: fill forms, comment, edit, organise pages and redact, sign with a CAC, and check signatures against the DoD PKI. Documents stay on the computer.",
+            "isAccessibleForFree": true,
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "featureList": [
+              "PDF form filling, comments, drawing, and text and image editing",
+              "Page organisation, protection and redaction",
+              "CAC digital signing, with multiple signers appended as incremental updates",
+              "Signature verification against the bundled DoD PKI",
+              "Local-only file library with the last 10 versions of each file"
             ],
             "publisher": { "@id": "https://thepollywog.github.io/#org" }
           },
@@ -680,7 +700,7 @@ Verify anything you act on against the official source, your NRC, or MyNavy Care
 
 <section id="tools" aria-labelledby="tools-h">
 <p class="eyebrow">The tools</p>
-<h2 id="tools-h">WebNAVFIT and SaltDog</h2>
+<h2 id="tools-h">WebNAVFIT, SaltDog and PDF Wizard</h2>
 <div class="cards">
 <article class="card">
 <h3><a href="saltdog/">SALTDOG</a></h3>
@@ -705,6 +725,29 @@ Verify anything you act on against the official source, your NRC, or MyNavy Care
 <li>Everything stored in your browser, exportable to a single file you keep</li>
 </ul>
 <p class="go"><a class="btn" href="webnavfit/">Open WEBNAVFIT</a></p>
+</article>
+<article class="card">
+<h3><a href="pdf-wizard/">PDF WIZARD</a></h3>
+<p>A PDF viewer and editor for administrative paperwork, with CAC digital signing.</p>
+<ul>
+<li>View, fill forms, comment, draw, edit text and images, organise pages, protect and redact</li>
+<li>Sign with a CAC — fill empty signature fields or draw new ones, and several people can sign the same form in turn without invalidating the signatures already on it</li>
+<li>Check signatures against the DoD PKI root and issuing CAs, bundled with the app</li>
+<li>Files kept in your browser's storage, with the last 10 versions of each</li>
+<li>CAC signing needs a small browser extension and helper installed on the computer; everything else needs nothing</li>
+</ul>
+<p class="go"><a class="btn" href="pdf-wizard/">Open PDF WIZARD</a></p>
+</article>
+<article class="card">
+<h3><a href="https://www.youtube.com/@HowToPollywog">HOW TO POLLYWOG on YouTube</a></h3>
+<p>Narrated, captioned explainer videos that walk through Navy training material one idea at a time.</p>
+<ul>
+<li>Series built from public Navy references — radar and electronic warfare fundamentals, NEETS electronics modules, and more</li>
+<li>Each scene carries one concept, with the numbers worked through on screen rather than just stated</li>
+<li>Burned-in captions and a separate caption track, so they work with the sound off</li>
+<li>Free to watch, no account needed</li>
+</ul>
+<p class="go"><a class="btn" href="https://www.youtube.com/@HowToPollywog">Watch on YouTube</a></p>
 </article>
 </div>
 </section>
@@ -764,7 +807,8 @@ Verify anything you act on against the official source, your NRC, or MyNavy Care
           publication. Nothing here is a system of record.
         </p>
         <p>
-          Source code on <a href="https://github.com/ThePollywog">GitHub</a>. Both tools are free
+          Source code on <a href="https://github.com/ThePollywog">GitHub</a>. Explainer videos on
+          <a href="https://www.youtube.com/@HowToPollywog">YouTube</a>. The tools are free
           and store their data only in your browser.
         </p>
       </div>
